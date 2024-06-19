@@ -4,7 +4,53 @@ import truckIcon from "../assets/truck-fast.svg";
 import routeIcon from "../assets/route-icon.svg";
 import boxIcon from "../assets/box.svg";
 import map from "../assets/map.png";
+import {ApolloClient, InMemoryCache, gql} from "@apollo/client";
+import { useState, useEffect } from 'react';
+
 function DetailsModal() {
+
+  // console.log(humidity[humidity.length -1].temperature)
+
+
+  const [humidity, setTemperature] = useState([]);
+
+  const queryUrl = "https://api.studio.thegraph.com/query/57950/iot/version/latest";
+
+  const client = new ApolloClient({
+    uri: queryUrl,
+    cache: new InMemoryCache()
+  });
+
+  const getTemperature = gql`
+  query{
+    updates(first: 5) {
+      id
+      sensor
+      temperature
+      blockNumber
+    }
+  }
+  `;
+
+  useEffect(() => {
+    const fetchTemperature = async () => {
+      try {
+        const {data} = await client.query({query: getTemperature});
+
+        setTemperature(data.updates);
+        console.log(data.updates)
+
+      } catch (error) {
+        console.log("unable to fetch data",error)
+      }
+    } 
+
+    fetchTemperature();
+
+    return() => {}
+
+  }, [client, getTemperature]);
+
   return (
     <div className="absolute inset-0 flex justify-center text-white  pt-[120px] bg-white bg-opacity-65 backdrop-blur-sm">
       <div className="bg-white rounded-[5px] p-10 w-[856px] h-fit">
@@ -16,8 +62,8 @@ function DetailsModal() {
             Jos Nigeria,
           </h5>
           <div className="bg-[#5F77F5] mb-3 w-full py-[8.5px] font-bold text-base leading-[21px] flex justify-center gap-x-[18px]">
-            <h2>Humidity, 60’</h2>
-            <h2>Temperature 30’</h2>
+            <h2><small className="text-light">Humidity</small>, {humidity && humidity.length > 0 && humidity[humidity.length -1]?.temperature / 1000} <sup>0</sup></h2>
+            <h2>Temperature 30<sup>0</sup></h2>
           </div>
           <h3 className="font-bold text-base leading-[24px] mb-[6px]">
             B5799585GDKE8
