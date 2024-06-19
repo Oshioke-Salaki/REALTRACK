@@ -1,0 +1,9 @@
+type update @entity(immutable: true) {
+  id: Bytes!
+  sensor: String! # string
+  temperature: BigInt! # uint256
+  humidity: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

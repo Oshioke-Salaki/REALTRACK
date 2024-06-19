@@ -9,9 +9,6 @@ import { useState, useEffect } from 'react';
 
 function DetailsModal() {
 
-  // console.log(humidity[humidity.length -1].temperature)
-
-
   const [humidity, setTemperature] = useState([]);
 
   const queryUrl = "https://api.studio.thegraph.com/query/57950/iot/version/latest";

@@ -1,0 +1,26 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: iot
+    network: base-sepolia
+    source:
+      address: "0x0EFE8a01210ba502B35Ca2A82095B45c51406ff6"
+      abi: iot
+      startBlock: 11520234
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - update
+      abis:
+        - name: iot
+          file: ./abis/iot.json
+      eventHandlers:
+        - event: update(string,uint256,uint256)
+          handler: handleupdate
+      file: ./src/iot.ts
