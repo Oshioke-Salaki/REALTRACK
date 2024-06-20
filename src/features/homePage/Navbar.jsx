@@ -1,6 +1,6 @@
 import { useDisconnect } from "@starknet-react/core";
-import Connector from "./Connector";
-import Logo from "./Logo";
+import Connector from "../../components/Connector";
+import Logo from "../../components/Logo";
 
 function Navbar() {
   return (
