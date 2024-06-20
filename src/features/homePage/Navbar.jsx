@@ -4,6 +4,7 @@ import Logo from "./Logo";
 import { NavLink } from "react-router-dom";
 import analytics from "../../assets/chart.svg";
 import tracking from "../../assets/tracking.svg";
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 function Navbar() {
   return (
@@ -19,7 +20,8 @@ function Navbar() {
           Analytics
         </NavLink>
       </div>
-      <Connector />
+      {/* <Connector /> */}
+      <ConnectButton />
     </nav>
   );
 }
