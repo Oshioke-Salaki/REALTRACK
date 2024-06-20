@@ -10,97 +10,75 @@ import humidityIcon from "../../assets/humidityIcon.svg";
 import tempIcon from "../../assets/tempIcon.svg";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { Tooltip } from "flowbite-react";
-
-const data = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+import closeIcon from "../../assets/closeIcon.svg";
 
 function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
   const [sensorData, setSensorData] = useState([]);
-
-  const queryUrl = "https://api.studio.thegraph.com/query/57950/iotbase/version/latest";
+  const queryUrl =
+    "https://api.studio.thegraph.com/query/57950/iotbase/version/latest";
 
   const client = new ApolloClient({
     uri: queryUrl,
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
   });
 
   const getSensorData = gql`
-  query{
-    updates{
-      id
-      sensor
-      temperature
-      humidity
+    query {
+      updates {
+        id
+        sensor
+        temperature
+        humidity
+      }
     }
-  }
   `;
 
   useEffect(() => {
     const fetchSensorData = async () => {
       try {
-        const {data} = await client.query({query: getSensorData});
+        const { data } = await client.query({ query: getSensorData });
 
-        console.log(data)
+        console.log(data);
 
-        setSensorData(data.updates);
-        console.log(data.updates)
-
+        setSensorData(
+          data.updates
+            .map((update, i) => {
+              return {
+                ...update,
+                time: i * 12,
+              };
+            })
+            .sort((a, b) => a.time - b.time)
+        );
+        console.log(
+          data.updates.map((update, i) => {
+            return {
+              ...update,
+              time: i * 12,
+            };
+          })
+        );
       } catch (error) {
-        console.log("unable to fetch data",error)
+        console.log("unable to fetch data", error);
       }
-    } 
+    };
 
     fetchSensorData();
 
-    return() => {}
-
+    return () => {};
   }, [client, getSensorData]);
 
   return (
     <div className="absolute inset-0 flex justify-center text-white  pt-[120px] bg-white bg-opacity-65 backdrop-blur-sm">
-      <div className="bg-white shadow-md flex flex-col items-center rounded-[5px] p-10 w-[856px] h-fit">
+      <div className="bg-white shadow-md flex flex-col items-center rounded-[5px] p-10 w-[856px] h-fit relative">
+        <button
+          className="absolute top-[9px] right-4"
+          onClick={() => {
+            setIsDetailsOpen(false);
+          }}
+        >
+          <img src={closeIcon} alt="" />
+        </button>
         <div className="bg-[#4BAF47] w-full rounded-[6px] py-[27px] px-[35px]">
           <h5 className="font-semibold text-xs leading-[18px] mb-2">
             Current Location
@@ -126,7 +104,13 @@ function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
             <div className="flex items-center gap-x-[18px]">
               <img src={tempIcon} alt="" />
               <h2 className="font font-extrabold text-base leading-6 text-[#121212]">
-                Temperature - <span className="text-[#4BAF47]">{sensorData && sensorData.length > 0 && sensorData[sensorData.length -1]?.temperature / 1000}&deg;</span>
+                Temperature -{" "}
+                <span className="text-[#4BAF47]">
+                  {sensorData &&
+                    sensorData.length > 0 &&
+                    sensorData[sensorData.length - 1]?.temperature / 1000}
+                  &deg;
+                </span>
               </h2>
             </div>
           </div>
@@ -154,7 +138,7 @@ function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
             <AreaChart
               width={614}
               height={217}
-              data={data}
+              data={sensorData}
               margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
             >
               <defs>
@@ -167,20 +151,20 @@ function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
                   <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="name" />
+              <XAxis dataKey="time" />
               <YAxis />
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip />
               <Area
                 type="monotone"
-                dataKey="uv"
+                dataKey="humidity"
                 stroke="#8884d8"
                 fillOpacity={1}
                 fill="url(#colorUv)"
               />
               <Area
                 type="monotone"
-                dataKey="pv"
+                dataKey="temperature"
                 stroke="#82ca9d"
                 fillOpacity={1}
                 fill="url(#colorPv)"
@@ -190,7 +174,21 @@ function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
           <ul className="flex flex-col gap-y-3 text-xl leading-6 text-black list-disc pl-6 mb-[33px]">
             <li>
               Growing degree days GDD :{" "}
-              <span className="font-bold text-[#4BAF47]">34%</span>
+              <span className="font-bold text-[#4BAF47]">
+                {sensorData.length === 0
+                  ? "0"
+                  : (
+                      ((sensorData?.sort(
+                        (a, b) => b.temperature - a.temperature
+                      )[0].temperature +
+                        sensorData?.sort(
+                          (a, b) => a.temperature - b.temperature
+                        )[0].temperature) /
+                        2 -
+                        10000) /
+                      1000
+                    ).toLocaleString()}
+              </span>
             </li>
             <li>
               30 days Humidity risk:{" "}
@@ -213,33 +211,3 @@ function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
 }
 
 export default DetailsModal;
-
-{
-  /* <div className="grid grid-cols-[1fr_1fr] mt-5 gap-x-[100px] text-[#121212]">
-          <ul className="pl-[30px]">
-            <TimeLineItem
-              mini={true}
-              title="In process-recipient city"
-              subTitle="Berlin,germany"
-              time="11:45 PM"
-              icon={truckIcon}
-            />
-            <TimeLineItem
-              mini={true}
-              title="Humidity 60'  - Temperature 48'"
-              subTitle="Jakarta,indonesia"
-              time="11:45 PM"
-              icon={routeIcon}
-            />
-            <TimeLineItem
-              mini={true}
-              title="Sent from majalengka"
-              subTitle="Majalengka,indonesia"
-              time="11:45 PM"
-              icon={boxIcon}
-              lastItem={true}
-            />
-          </ul>
-          <img src={map} alt="" />
-        </div> */
-}
