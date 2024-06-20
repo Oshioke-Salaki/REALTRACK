@@ -57,43 +57,46 @@ const data = [
 ];
 
 function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
-  const [humidity, setTemperature] = useState([]);
+  const [sensorData, setSensorData] = useState([]);
 
-  const queryUrl =
-    "https://api.studio.thegraph.com/query/57950/iot/version/latest";
+  const queryUrl = "https://api.studio.thegraph.com/query/57950/iotbase/version/latest";
 
   const client = new ApolloClient({
     uri: queryUrl,
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache()
   });
 
-  const getTemperature = gql`
-    query {
-      updates(first: 5) {
-        id
-        sensor
-        temperature
-        blockNumber
-      }
+  const getSensorData = gql`
+  query{
+    updates{
+      id
+      sensor
+      temperature
+      humidity
     }
+  }
   `;
 
   useEffect(() => {
-    const fetchTemperature = async () => {
+    const fetchSensorData = async () => {
       try {
-        const { data } = await client.query({ query: getTemperature });
+        const {data} = await client.query({query: getSensorData});
 
-        setTemperature(data.updates);
-        console.log(data.updates);
+        console.log(data)
+
+        setSensorData(data.updates);
+        console.log(data.updates)
+
       } catch (error) {
-        console.log("unable to fetch data", error);
+        console.log("unable to fetch data",error)
       }
-    };
+    } 
 
-    fetchTemperature();
+    fetchSensorData();
 
-    return () => {};
-  }, [client, getTemperature]);
+    return() => {}
+
+  }, [client, getSensorData]);
 
   return (
     <div className="absolute inset-0 flex justify-center text-white  pt-[120px] bg-white bg-opacity-65 backdrop-blur-sm">
@@ -112,9 +115,9 @@ function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
                 <h3 className="font font-extrabold text-base leading-6 text-[#121212]">
                   Humidity -
                   <span className="text-[#4BAF47]">
-                    {humidity &&
-                      humidity.length > 0 &&
-                      humidity[humidity.length - 1]?.temperature / 1000}
+                    {sensorData &&
+                      sensorData.length > 0 &&
+                      sensorData[sensorData.length - 1]?.humidity / 1000}
                     `
                   </span>
                 </h3>
@@ -123,7 +126,7 @@ function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
             <div className="flex items-center gap-x-[18px]">
               <img src={tempIcon} alt="" />
               <h2 className="font font-extrabold text-base leading-6 text-[#121212]">
-                Temperature - <span className="text-[#4BAF47]">30&deg;</span>
+                Temperature - <span className="text-[#4BAF47]">{sensorData && sensorData.length > 0 && sensorData[sensorData.length -1]?.temperature / 1000}&deg;</span>
               </h2>
             </div>
           </div>
