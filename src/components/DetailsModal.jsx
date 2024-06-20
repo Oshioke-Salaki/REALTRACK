@@ -9,35 +9,34 @@ import { useState, useEffect } from 'react';
 
 function DetailsModal() {
 
-  // console.log(humidity[humidity.length -1].temperature)
+  const [sensorData, setSensorData] = useState([]);
 
-
-  const [humidity, setTemperature] = useState([]);
-
-  const queryUrl = "https://api.studio.thegraph.com/query/57950/iot/version/latest";
+  const queryUrl = "https://api.studio.thegraph.com/query/57950/iotbase/version/latest";
 
   const client = new ApolloClient({
     uri: queryUrl,
     cache: new InMemoryCache()
   });
 
-  const getTemperature = gql`
+  const getSensorData = gql`
   query{
-    updates(first: 5) {
+    updates{
       id
       sensor
       temperature
-      blockNumber
+      humidity
     }
   }
   `;
 
   useEffect(() => {
-    const fetchTemperature = async () => {
+    const fetchSensorData = async () => {
       try {
-        const {data} = await client.query({query: getTemperature});
+        const {data} = await client.query({query: getSensorData});
 
-        setTemperature(data.updates);
+        console.log(data)
+
+        setSensorData(data.updates);
         console.log(data.updates)
 
       } catch (error) {
@@ -45,11 +44,11 @@ function DetailsModal() {
       }
     } 
 
-    fetchTemperature();
+    fetchSensorData();
 
     return() => {}
 
-  }, [client, getTemperature]);
+  }, [client, getSensorData]);
 
   return (
     <div className="absolute inset-0 flex justify-center text-white  pt-[120px] bg-white bg-opacity-65 backdrop-blur-sm">
@@ -62,8 +61,8 @@ function DetailsModal() {
             Jos Nigeria,
           </h5>
           <div className="bg-[#5F77F5] mb-3 w-full py-[8.5px] font-bold text-base leading-[21px] flex justify-center gap-x-[18px]">
-            <h2><small className="text-light">Humidity</small>, {humidity && humidity.length > 0 && humidity[humidity.length -1]?.temperature / 1000} <sup>0</sup></h2>
-            <h2>Temperature 30<sup>0</sup></h2>
+            <h2><small className="text-light">Humidity</small>, {sensorData && sensorData.length > 0 && sensorData[sensorData.length -1]?.humidity / 1000} <sup>0</sup></h2>
+            <h2><small className="text-light">Temperature</small>, {sensorData && sensorData.length > 0 && sensorData[sensorData.length -1]?.temperature / 1000} <sup>0</sup></h2>
           </div>
           <h3 className="font-bold text-base leading-[24px] mb-[6px]">
             B5799585GDKE8
