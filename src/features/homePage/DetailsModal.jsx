@@ -12,7 +12,12 @@ import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { Tooltip } from "flowbite-react";
 import closeIcon from "../../assets/closeIcon.svg";
 
-function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
+function DetailsModal({
+  setIsRecommendationOpen,
+  setIsDetailsOpen,
+  setData,
+  setLoadingAiData,
+}) {
   const [sensorData, setSensorData] = useState([]);
   const queryUrl =
     "https://api.studio.thegraph.com/query/57950/iotbase/version/latest";
@@ -32,6 +37,39 @@ function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
       }
     }
   `;
+
+  const handleAiPrompt = async (e) => {
+    e.preventDefault();
+
+    setLoadingAiData(true);
+    const prompt = `with humidity of ${
+      sensorData[sensorData.length - 1]?.humidity / 1000
+    } and temperature of ${
+      sensorData[sensorData.length - 1]?.temperature / 1000
+    } what can be the condition of beans planted in western Africa, provide bullet points for a novice farmer to take note.`;
+
+    const response = await fetch("https://privy-proof-api.onrender.com/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ prompt }),
+    });
+
+    const json = await response.json();
+
+    console.log(json);
+
+    if (!response.ok) {
+      setLoadingAiData(false);
+      alert(json);
+    }
+
+    if (response.ok) {
+      setLoadingAiData(false);
+      setData(json.data.content);
+    }
+  };
 
   useEffect(() => {
     const fetchSensorData = async () => {
@@ -125,9 +163,10 @@ function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
           </h2>
           <button
             className="flex items-center gap-x-[9px] font-semibold text-sm leading-[21px] text-[#559C2A]"
-            onClick={() => {
+            onClick={(e) => {
               setIsDetailsOpen(false);
               setIsRecommendationOpen(true);
+              handleAiPrompt(e);
             }}
           >
             Get Recommendation <img src={rightArrRed} alt="" />
@@ -198,9 +237,10 @@ function DetailsModal({ setIsRecommendationOpen, setIsDetailsOpen }) {
         </div>
         <button
           className="py-[14px] w-[397px] bg-[#F5F5F5] font-bold text-sm leading-[30px] text-[#4BAF47] rounded-[10px] mx-auto"
-          onClick={() => {
+          onClick={(e) => {
             setIsDetailsOpen(false);
             setIsRecommendationOpen(true);
+            handleAiPrompt(e);
           }}
         >
           Get free Ai recommendation
