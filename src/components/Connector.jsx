@@ -23,7 +23,7 @@ function Connector() {
         )}
       {!address ? (
         <button
-          className="py-[10px] px-6 bg-[#9389FB] rounded-[10px] font-medium text-lg leading-7"
+          className="py-[10px] px-6 bg-[#4BAF47] text-white rounded-[10px] font-medium text-lg leading-7"
           onClick={() => setConnectModal(true)}
         >
           Connect wallet
@@ -37,7 +37,7 @@ function Connector() {
           </div>
           <button
             onClick={() => disconnect()}
-            className="py-[10px] px-6 bg-[#9389FB] rounded-[10px] font-medium text-lg leading-7"
+            className="py-[10px] px-6 bg-[#4BAF47] rounded-[10px] font-medium text-lg leading-7"
           >
             Disconnect
           </button>

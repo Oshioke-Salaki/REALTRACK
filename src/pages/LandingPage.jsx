@@ -10,6 +10,7 @@ import NewsArticle from "../features/LandingPage/NewsArticle";
 import ContactUs from "../features/LandingPage/ContactUs";
 import Sponsors from "../features/LandingPage/Sponsors";
 import Footer from "../features/LandingPage/Footer";
+import { NavLink } from "react-router-dom";
 
 function LandingPage() {
   return (
@@ -27,9 +28,12 @@ function LandingPage() {
             Solutions for Smart Farming
           </h1>
         </div>
-        <button className="py-[14px] px-[50px] bg-[#4BAF47] font-bold text-sm leading-[30px] text-center rounded-[10px]">
+        <NavLink
+          to="app"
+          className="py-[14px] px-[50px] bg-[#4BAF47] font-bold text-sm leading-[30px] text-center rounded-[10px]"
+        >
           Go to App
-        </button>
+        </NavLink>
       </div>
       <GetToKnowUs />
       <OurServices />

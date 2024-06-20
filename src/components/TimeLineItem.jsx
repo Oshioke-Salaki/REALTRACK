@@ -9,14 +9,14 @@ function TimeLineItem({
 }) {
   return (
     <li
-      className={`pl-[42px] py-1  relative h-[142px] flex justify-between ${
-        !lastItem && "border-l-[1px] border-[#9D94FC]"
+      className={`pl-[42px] py-1  relative h-[142px] flex text-[#121212] justify-between ${
+        !lastItem && "border-l-[1px] border-[#121212]"
       }`}
     >
       <div
-        className={`absolute top-0  ${
-          mini ? "p-[13px] left-[-25px]" : "p-[18px] left-[-30px]"
-        } rounded-full ${current ? "bg-purpleGradient" : "bg-[#121D3D]"}`}
+        className={`absolute top-0 bg-[#8BC34A]  ${
+          mini ? "p-[13px] left-[-25px]" : "p-[18px] left-[-30px] "
+        } rounded-full`}
       >
         <img src={icon} alt="" />
       </div>

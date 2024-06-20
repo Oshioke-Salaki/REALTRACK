@@ -5,12 +5,15 @@ import routeIcon from "../../assets/route-icon.svg";
 import boxIcon from "../../assets/box.svg";
 import TimeLineItem from "../../components/TimeLineItem";
 
-function History() {
+function History({ setIsDetailsOpen, setIsRecommendationOpen }) {
   return (
     <div className="py-[36px]">
       <div className="flex items-center justify-between w-full mb-[30px]">
         <h2 className="font-semibold text-xl leading-[30px]">History</h2>
-        <button className="flex items-center gap-x-[9px] font-semibold text-sm leading-[21px] text-[#C8482C]">
+        <button
+          className="flex items-center gap-x-[9px] font-semibold text-sm leading-[21px] text-[#121212]"
+          onClick={() => setIsDetailsOpen(true)}
+        >
           Details <img src={rightArrRed} alt="" />
         </button>
       </div>
@@ -20,7 +23,6 @@ function History() {
           subTitle="Berlin,germany"
           time="11:45 PM"
           icon={truckIcon}
-          current={true}
         />
         <TimeLineItem
           title="Humidity 60'  - Temperature 48'"
