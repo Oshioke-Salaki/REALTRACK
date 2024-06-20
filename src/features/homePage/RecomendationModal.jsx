@@ -1,4 +1,5 @@
 import closeIcon from "../../assets/closeIcon.svg";
+import Spinner from "../../components/Spinner";
 
 function RecomendationModal({
   setIsRecommendationOpen,
@@ -21,8 +22,12 @@ function RecomendationModal({
         <div className="py-[7px] px-10 bg-[#4BAF47] rounded-[6px] font-semibold text-lg leading-[27px] mb-3 text-white">
           Recomendation
         </div>
-        <div className="py-5 pl-[27px] pr-[79px] bg-[#F5F5F5]">
-          <p className="text-sm leading-[30px] font-medium">{data}</p>
+        <div className="py-5 pl-[27px] pr-[79px] bg-[#F5F5F5] min-h-[300px]">
+          {loadingAiData ? (
+            <Spinner />
+          ) : (
+            <p className="text-sm leading-[30px] font-medium">{data}</p>
+          )}
         </div>
       </div>
     </div>

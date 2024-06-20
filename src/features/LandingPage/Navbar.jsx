@@ -6,6 +6,7 @@ import pintrest from "../../assets/pintrest.svg";
 import instagram from "../../assets/instagram.svg";
 import NavigationLinks from "./NavigationLinks";
 import searchIcon from "../../assets/searchIcon.svg";
+import { NavLink } from "react-router-dom";
 
 function Navbar() {
   return (
@@ -24,9 +25,12 @@ function Navbar() {
         <button className="px-[31px] py-[6px] border-l-solid border-l-[1px] border-l-white border-opacity-30">
           <img src={searchIcon} alt="" />
         </button>
-        <button className="py-[14px] font-bold text-sm leading-[30px] px-[38px] bg-[#4BAF47] rounded-[10px]">
-          Connect wallet
-        </button>
+        <NavLink
+          to="app"
+          className="py-[14px] font-bold text-sm leading-[30px] px-[38px] bg-[#4BAF47] rounded-[10px]"
+        >
+          Go to App
+        </NavLink>
       </div>
     </nav>
   );
