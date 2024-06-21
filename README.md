@@ -23,7 +23,7 @@ Deployed on the farm and in logistics vehicles to collect environmental data.
 Data Transmission: 
 Sensors transmit data to the smart contract.
 
-### Smart Contract:
+### Smart Contract:
 
 Data Reception: Receives data from IoT sensors.
 Data Storage: Securely stores the data on the blockchain.
